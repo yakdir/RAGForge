@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ doc.title }} - RAGForge{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <a href="{% url 'documents:list' %}" class="text-blue-600 hover:underline text-sm">← 返回文档列表</a>
+</div>
+
+<div class="bg-white rounded-lg shadow p-6 mb-6">
+    <h1 class="text-2xl font-bold text-gray-900">{{ doc.title }}</h1>
+    <div class="flex gap-4 mt-3 text-sm text-gray-500">
+        <span>类型：{{ doc.file_type }}</span>
+        <span>大小：{{ doc.file_size|filesizeformat }}</span>
+        <span>分块数：{{ doc.chunk_count }}</span>
+        <span>状态：{{ doc.get_status_display }}</span>
+        <span>上传：{{ doc.created_at|date:"Y-m-d H:i" }}</span>
+    </div>
+</div>
+
+{% if chunks %}
+<div class="bg-white rounded-lg shadow">
+    <div class="px-6 py-4 border-b">
+        <h2 class="text-lg font-semibold">分块预览（前 {{ chunks|length }} 个）</h2>
+    </div>
+    <div class="divide-y">
+        {% for chunk in chunks %}
+        <div class="px-6 py-4">
+            <div class="text-xs text-gray-400 mb-1">
+                #{{ chunk.chunk_index }} · {{ chunk.strategy }} · {{ chunk.char_count }} 字
+            </div>
+            <p class="text-sm text-gray-700">{{ chunk.content|truncatechars:300 }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}首页 - RAGForge{% endblock %}
+
+{% block content %}
+<div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">RAGForge</h1>
+    <p class="text-gray-600 mt-1">RAG 评估与优化平台</p>
+</div>
+
+<!-- 统计卡片 -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+    <div class="bg-white rounded-lg shadow p-5">
+        <div class="text-sm text-gray-500 mb-1">文档总数</div>
+        <div class="text-3xl font-bold text-blue-600">{{ document_count }}</div>
+    </div>
+    <div class="bg-white rounded-lg shadow p-5">
+        <div class="text-sm text-gray-500 mb-1">知识库</div>
+        <div class="text-3xl font-bold text-green-600">{{ collection_count }}</div>
+    </div>
+    <div class="bg-white rounded-lg shadow p-5">
+        <div class="text-sm text-gray-500 mb-1">评估运行</div>
+        <div class="text-3xl font-bold text-purple-600">{{ eval_run_count }}</div>
+    </div>
+    <div class="bg-white rounded-lg shadow p-5">
+        <div class="text-sm text-gray-500 mb-1">完成运行</div>
+        <div class="text-3xl font-bold text-orange-600">{{ completed_runs }}</div>
+    </div>
+</div>
+
+<!-- 快捷入口 -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+    <a href="/documents/upload/" class="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow">
+        <div class="text-2xl mb-2">📄</div>
+        <div class="font-semibold text-gray-900 mb-1">上传文档</div>
+        <div class="text-sm text-gray-500">上传 PDF/DOCX/MD/TXT 文档，自动分块向量化</div>
+    </a>
+    <a href="/retrieval/search/" class="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow">
+        <div class="text-2xl mb-2">🔍</div>
+        <div class="font-semibold text-gray-900 mb-1">文档检索</div>
+        <div class="text-sm text-gray-500">稠密 / BM25 / 混合 三种检索策略</div>
+    </a>
+    <a href="/evaluation/datasets/" class="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow">
+        <div class="text-2xl mb-2">📊</div>
+        <div class="font-semibold text-gray-900 mb-1">评估分析</div>
+        <div class="text-sm text-gray-500">量化指标对比，优化检索效果</div>
+    </a>
+</div>
+
+<!-- 最近评估记录 -->
+<div class="bg-white rounded-lg shadow">
+    <div class="px-6 py-4 border-b flex justify-between items-center">
+        <h2 class="text-lg font-semibold">最近评估</h2>
+        <a href="/evaluation/runs/" class="text-blue-600 text-sm hover:underline">查看全部 →</a>
+    </div>
+    <div class="divide-y">
+        {% for run in recent_runs %}
+        <div class="px-6 py-4 flex justify-between items-center">
+            <div>
+                <div class="font-medium">{{ run.config.name }}</div>
+                <div class="text-sm text-gray-500">{{ run.dataset.name }} · {{ run.created_at|date:"m-d H:i" }}</div>
+            </div>
+            <div class="text-right">
+                <div class="text-sm text-gray-500">MRR</div>
+                <div class="font-semibold text-green-600">{{ run.mrr|floatformat:3 }}</div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="px-6 py-8 text-center text-gray-500">
+            还没有评估记录
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

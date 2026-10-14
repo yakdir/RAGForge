@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}检索 - RAGForge{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <h1 class="text-2xl font-bold text-gray-900 mb-6">文档检索</h1>
+
+    <div class="bg-white rounded-lg shadow p-6 mb-6">
+        <form method="post">
+            {% csrf_token %}
+            <div class="flex gap-3 mb-4 items-center">
+                <select name="retrieval_type" class="border border-gray-300 rounded-lg px-3 py-2">
+                    <option value="dense" {% if retrieval_type == 'dense' %}selected{% endif %}>稠密检索 (向量)</option>
+                    <option value="bm25" {% if retrieval_type == 'bm25' %}selected{% endif %}>BM25 (关键词)</option>
+                    <option value="hybrid" {% if retrieval_type == 'hybrid' %}selected{% endif %}>混合检索 (向量+关键词)</option>
+                </select>
+                <select name="top_k" class="border border-gray-300 rounded-lg px-3 py-2">
+                    <option value="3">Top 3</option>
+                    <option value="5" selected>Top 5</option>
+                    <option value="10">Top 10</option>
+                </select>
+                <label class="flex items-center gap-2 text-sm text-gray-600">
+                    <input type="checkbox" name="use_reranker" {% if use_reranker %}checked{% endif %}
+                        class="rounded border-gray-300">
+                    启用重排序 (Reranker)
+                </label>
+            </div>
+            <div class="flex gap-3">
+                <input type="text" name="query" value="{{ query }}" placeholder="输入你的问题..."
+                    class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    autofocus>
+                <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
+                    搜索
+                </button>
+            </div>
+        </form>
+    </div>
+
+    {% if results %}
+    <div class="space-y-4">
+        <div class="text-sm text-gray-500">找到 {{ results|length }} 条结果（{{ retrieval_type }}）</div>
+        {% for r in results %}
+        <div class="bg-white rounded-lg shadow p-5">
+            <div class="flex justify-between items-start mb-2">
+                <span class="text-xs text-gray-400">#{{ forloop.counter }}</span>
+                <span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
+                    得分: {{ r.score|floatformat:3 }}
+                </span>
+            </div>
+            <p class="text-gray-700 text-sm leading-relaxed">{{ r.content }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    {% elif query %}
+    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-yellow-800">
+        没有找到相关结果。换个关键词试试，或者确认已上传文档并处理完成。
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

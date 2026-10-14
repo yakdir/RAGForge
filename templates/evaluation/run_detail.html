@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}评估结果 - RAGForge{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <a href="{% url 'evaluation:runs' %}" class="text-blue-600 hover:underline text-sm">← 返回评估列表</a>
+</div>
+
+<div class="mb-6">
+    <h1 class="text-2xl font-bold text-gray-900">评估结果</h1>
+    <p class="text-gray-600 mt-1">{{ run.dataset.name }} · {{ run.config.name }}</p>
+</div>
+
+<!-- 指标汇总卡片 -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+    <div class="bg-white rounded-lg shadow p-5">
+        <div class="text-sm text-gray-500 mb-1">Recall@5</div>
+        <div class="text-3xl font-bold text-blue-600">{{ run.recall_at_5|floatformat:3 }}</div>
+    </div>
+    <div class="bg-white rounded-lg shadow p-5">
+        <div class="text-sm text-gray-500 mb-1">nDCG@5</div>
+        <div class="text-3xl font-bold text-green-600">{{ run.ndcg_at_5|floatformat:3 }}</div>
+    </div>
+    <div class="bg-white rounded-lg shadow p-5">
+        <div class="text-sm text-gray-500 mb-1">MRR</div>
+        <div class="text-3xl font-bold text-purple-600">{{ run.mrr|floatformat:3 }}</div>
+    </div>
+    <div class="bg-white rounded-lg shadow p-5">
+        <div class="text-sm text-gray-500 mb-1">平均延迟</div>
+        <div class="text-3xl font-bold text-orange-600">{{ run.avg_latency_ms|floatformat:0 }}ms</div>
+    </div>
+</div>
+
+<!-- 详细指标 -->
+<div class="bg-white rounded-lg shadow p-6 mb-6">
+    <h2 class="text-lg font-semibold mb-4">详细指标</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+        <div>
+            <span class="text-gray-500">Recall@1:</span>
+            <span class="font-medium ml-2">{{ run.recall_at_1|floatformat:3 }}</span>
+        </div>
+        <div>
+            <span class="text-gray-500">Recall@3:</span>
+            <span class="font-medium ml-2">{{ run.recall_at_3|floatformat:3 }}</span>
+        </div>
+        <div>
+            <span class="text-gray-500">Recall@10:</span>
+            <span class="font-medium ml-2">{{ run.recall_at_10|floatformat:3 }}</span>
+        </div>
+        <div>
+            <span class="text-gray-500">nDCG@10:</span>
+            <span class="font-medium ml-2">{{ run.ndcg_at_10|floatformat:3 }}</span>
+        </div>
+    </div>
+</div>
+
+<!-- 每个问题的结果 -->
+<div class="bg-white rounded-lg shadow">
+    <div class="px-6 py-4 border-b">
+        <h2 class="text-lg font-semibold">逐题结果（{{ results|length }} 题）</h2>
+    </div>
+    <div class="divide-y">
+        {% for r in results %}
+        <div class="px-6 py-4">
+            <div class="flex justify-between items-start mb-2">
+                <div class="font-medium text-gray-800 flex-1">{{ forloop.counter }}. {{ r.question.question }}</div>
+                <div class="text-xs text-gray-400 ml-4 whitespace-nowrap">{{ r.latency_ms|floatformat:0 }}ms</div>
+            </div>
+            <div class="flex gap-4 text-sm">
+                <span class="text-gray-500">召回: {{ r.recall_at_k }}</span>
+                <span class="text-gray-500">RR: {{ r.reciprocal_rank|floatformat:3 }}</span>
+                <span class="text-gray-500">nDCG: {{ r.ndcg|floatformat:3 }}</span>
+            </div>
+            {% if r.retrieved_chunk_ids %}
+            <div class="text-xs text-gray-400 mt-1">
+                命中 {{ r.retrieved_chunk_ids|length }} 条结果
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

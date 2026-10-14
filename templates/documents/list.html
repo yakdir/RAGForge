@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}文档管理 - RAGForge{% endblock %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold text-gray-900">文档管理</h1>
+    <a href="{% url 'documents:upload' %}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">上传文档</a>
+</div>
+
+{% if collections %}
+<div class="bg-white rounded-lg shadow p-4 mb-6">
+    <h2 class="text-lg font-semibold mb-3">知识库</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {% for col in collections %}
+        <div class="border rounded p-3">
+            <div class="font-medium">{{ col.name }}</div>
+            <div class="text-sm text-gray-500 mt-1">{{ col.document_count }} 个文档</div>
+            <div class="text-xs text-gray-400 mt-1">{{ col.chunk_strategy }} · {{ col.chunk_size }}</div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<div class="bg-white rounded-lg shadow">
+    <table class="w-full">
+        <thead class="bg-gray-50 border-b">
+            <tr>
+                <th class="text-left px-4 py-3 text-sm font-medium text-gray-600">标题</th>
+                <th class="text-left px-4 py-3 text-sm font-medium text-gray-600">类型</th>
+                <th class="text-right px-4 py-3 text-sm font-medium text-gray-600">大小</th>
+                <th class="text-center px-4 py-3 text-sm font-medium text-gray-600">状态</th>
+                <th class="text-right px-4 py-3 text-sm font-medium text-gray-600">分块数</th>
+                <th class="text-left px-4 py-3 text-sm font-medium text-gray-600">上传时间</th>
+                <th class="text-center px-4 py-3 text-sm font-medium text-gray-600">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for doc in documents %}
+            <tr class="border-b hover:bg-gray-50">
+                <td class="px-4 py-3">
+                    <a href="{% url 'documents:detail' doc.id %}" class="text-blue-600 hover:underline">{{ doc.title }}</a>
+                </td>
+                <td class="px-4 py-3 text-gray-600">{{ doc.file_type }}</td>
+                <td class="px-4 py-3 text-right text-gray-600">{{ doc.file_size|filesizeformat }}</td>
+                <td class="px-4 py-3 text-center">
+                    {% if doc.status == 'ready' %}
+                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">就绪</span>
+                    {% elif doc.status == 'processing' %}
+                    <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs">处理中</span>
+                    {% elif doc.status == 'failed' %}
+                    <span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs">失败</span>
+                    {% else %}
+                    <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">待处理</span>
+                    {% endif %}
+                </td>
+                <td class="px-4 py-3 text-right text-gray-600">{{ doc.chunk_count }}</td>
+                <td class="px-4 py-3 text-gray-600">{{ doc.created_at|date:"m-d H:i" }}</td>
+                <td class="px-4 py-3 text-center">
+                    <form method="post" action="{% url 'documents:delete' doc.id %}" style="display:inline"
+                        onsubmit="return confirm('确定删除这个文档吗？')">
+                        {% csrf_token %}
+                        <button type="submit" class="text-red-600 hover:text-red-800 text-sm">删除</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="px-4 py-8 text-center text-gray-500">
+                    还没有文档，点击右上角"上传文档"开始
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

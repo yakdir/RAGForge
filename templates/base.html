@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}RAGForge{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+</head>
+<body class="bg-gray-50">
+    <nav class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <a href="/" class="text-xl font-bold text-blue-600">RAGForge</a>
+                <div class="flex items-center space-x-4">
+                    <a href="/documents/" class="text-gray-600 hover:text-blue-600">文档</a>
+                    <a href="/retrieval/search/" class="text-gray-600 hover:text-blue-600">检索</a>
+                    <a href="/evaluation/datasets/" class="text-gray-600 hover:text-blue-600">评估</a>
+                    <div class="relative">
+                        <button id="userMenuBtn" class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 text-sm font-medium">
+                            {{ user.email|first|upper }}
+                        </button>
+                        <div id="userMenu" class="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg border py-1 hidden z-50">
+                            <a href="/accounts/profile/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">个人中心</a>
+                            <a href="/accounts/profile/password/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">修改密码</a>
+                            <div class="border-t my-1"></div>
+                            <a href="/admin/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Admin 后台</a>
+                            <a href="/accounts/logout/" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-50">退出登录</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <main class="max-w-7xl mx-auto px-4 py-6">
+        {% block content %}{% endblock %}
+    </main>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const btn = document.getElementById('userMenuBtn');
+        const menu = document.getElementById('userMenu');
+        if (btn && menu) {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                menu.classList.toggle('hidden');
+            });
+            document.addEventListener('click', function() {
+                menu.classList.add('hidden');
+            });
+        }
+    });
+    </script>
+</body>
+</html>

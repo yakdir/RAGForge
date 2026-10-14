@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}网格搜索 - RAGForge{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <h1 class="text-2xl font-bold text-gray-900 mb-6">网格搜索 — 自动找最优配置</h1>
+
+    <div class="bg-white rounded-lg shadow p-6">
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-2">选择评估数据集</label>
+                <select name="dataset_id" class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                    {% for ds in datasets %}
+                    <option value="{{ ds.id }}">{{ ds.name }} ({{ ds.question_count }} 问题)</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                <h3 class="font-medium text-blue-900 mb-2">将自动测试以下 4 组配置：</h3>
+                <ul class="text-sm text-blue-800 space-y-1 list-disc list-inside">
+                    <li>稠密检索 Top5</li>
+                    <li>BM25 检索 Top5</li>
+                    <li>混合检索 Top5</li>
+                    <li>混合检索 Top10 + Reranker 重排序</li>
+                </ul>
+                <p class="text-sm text-blue-600 mt-3">跑完会自动对比所有指标，推荐最优配置。</p>
+            </div>
+
+            <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700">
+                开始网格搜索
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

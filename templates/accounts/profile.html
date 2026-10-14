@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}个人中心 - RAGForge{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <h1 class="text-2xl font-bold text-gray-900 mb-6">个人中心</h1>
+
+    <div class="bg-white rounded-lg shadow p-6 mb-6">
+        <div class="flex items-center gap-4 mb-6">
+            <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
+                <span class="text-2xl font-bold text-blue-600">{{ user.email|first|upper }}</span>
+            </div>
+            <div>
+                <div class="text-lg font-semibold">{{ user.email }}</div>
+                <div class="text-sm text-gray-500">最后登录：{{ user.last_login|date:"m-d H:i" }}</div>
+            </div>
+        </div>
+
+        <div class="border-t pt-6">
+            <a href="{% url 'accounts:change_password' %}" class="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                修改密码
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

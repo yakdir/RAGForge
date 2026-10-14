@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}RAGForge - 仪表盘{% endblock %}
+
+{% block content %}
+<div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">仪表盘</h1>
+    <p class="text-gray-600 mt-1">RAG 评估与优化实验台</p>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+    <div class="bg-white rounded-lg shadow p-6">
+        <div class="text-3xl font-bold text-blue-600">{{ document_count }}</div>
+        <div class="text-gray-500 mt-1">文档总数</div>
+    </div>
+    <div class="bg-white rounded-lg shadow p-6">
+        <div class="text-3xl font-bold text-green-600">{{ collection_count }}</div>
+        <div class="text-gray-500 mt-1">知识库</div>
+    </div>
+    <div class="bg-white rounded-lg shadow p-6">
+        <div class="text-3xl font-bold text-purple-600">{{ eval_run_count }}</div>
+        <div class="text-gray-500 mt-1">评估运行</div>
+    </div>
+    <div class="bg-white rounded-lg shadow p-6">
+        <div class="text-3xl font-bold text-orange-600">{{ completed_runs }}</div>
+        <div class="text-gray-500 mt-1">已完成</div>
+    </div>
+</div>
+
+<div class="bg-white rounded-lg shadow p-6">
+    <h2 class="text-xl font-semibold mb-4">最近完成的评估</h2>
+    {% if recent_runs %}
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead>
+                <tr class="border-b">
+                    <th class="text-left py-2">数据集</th>
+                    <th class="text-left py-2">配置</th>
+                    <th class="text-right py-2">Recall@5</th>
+                    <th class="text-right py-2">nDCG@5</th>
+                    <th class="text-right py-2">MRR</th>
+                    <th class="text-right py-2">延迟(ms)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for run in recent_runs %}
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="py-2">{{ run.dataset.name }}</td>
+                    <td class="py-2">{{ run.config.name }}</td>
+                    <td class="py-2 text-right">{{ run.recall_at_5|default:"-"|floatformat:3 }}</td>
+                    <td class="py-2 text-right">{{ run.ndcg_at_5|default:"-"|floatformat:3 }}</td>
+                    <td class="py-2 text-right">{{ run.mrr|default:"-"|floatformat:3 }}</td>
+                    <td class="py-2 text-right">{{ run.avg_latency_ms|default:"-"|floatformat:0 }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-gray-500">暂无评估记录。上传文档并创建评估数据集后开始实验。</p>
+    {% endif %}
+</div>
+{% endblock %}

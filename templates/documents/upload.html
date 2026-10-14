@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}上传文档 - RAGForge{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <h1 class="text-2xl font-bold text-gray-900 mb-6">上传文档</h1>
+
+    {% if error %}
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        {{ error }}
+    </div>
+    {% endif %}
+
+    <div class="bg-white rounded-lg shadow p-6">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-1">标题（可选）</label>
+                <input type="text" name="title" placeholder="不填则用文件名"
+                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-1">文件</label>
+                <input type="file" name="file" accept=".pdf,.docx,.md,.txt"
+                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <p class="text-sm text-gray-500 mt-2">支持 PDF / DOCX / Markdown / TXT</p>
+            </div>
+
+            <div class="flex gap-3">
+                <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
+                    上传并处理
+                </button>
+                <a href="{% url 'documents:list' %}" class="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300">
+                    取消
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
+        <h3 class="font-medium text-blue-900 mb-2">上传后会自动执行：</h3>
+        <ol class="text-sm text-blue-800 space-y-1 list-decimal list-inside">
+            <li>解析文档内容（PDF/DOCX/MD/TXT）</li>
+            <li>递归分块（512字符，64重叠）</li>
+            <li>bge-m3 本地向量化</li>
+            <li>存入 ChromaDB 向量库</li>
+        </ol>
+    </div>
+</div>
+{% endblock %}

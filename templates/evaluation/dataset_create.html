@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}新建评估数据集 - RAGForge{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <h1 class="text-2xl font-bold text-gray-900 mb-6">新建评估数据集</h1>
+
+    <div class="bg-white rounded-lg shadow p-6">
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-1">数据集名称</label>
+                <input type="text" name="name" value="测试数据集"
+                    class="w-full border border-gray-300 rounded-lg px-3 py-2">
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-1">选择知识库</label>
+                <select name="collection_id" class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                    {% for col in collections %}
+                    <option value="{{ col.id }}">{{ col.name }} ({{ col.document_count }} 文档)</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-1">问题数量</label>
+                <select name="num_questions" class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                    <option value="5">5 个</option>
+                    <option value="10" selected>10 个</option>
+                    <option value="20">20 个</option>
+                </select>
+                <p class="text-sm text-gray-500 mt-2">从文档中随机选取 chunk，自动生成测试问题</p>
+            </div>
+
+            <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
+                生成数据集
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
