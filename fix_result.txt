@@ -1,0 +1,6 @@
+知识库: 默认知识库 (id=2c448f30-fa06-45b8-bb6b-a46084ea5a6f)
+已关联 2 个 ready 状态的文档
+
+=== 验证 ===
+  人工智能框架.docx -> collection=2c448f30-fa06-45b8-bb6b-a46084ea5a6f
+  测试.txt -> collection=2c448f30-fa06-45b8-bb6b-a46084ea5a6f

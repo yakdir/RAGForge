@@ -1,0 +1,48 @@
+=== 评估运行记录 ===
+配置: 混合 Top5 + Reranker
+  Recall@5: 1.000
+  nDCG@5: 1.000
+  MRR: 1.000
+  延迟: 81ms
+
+配置: 混合 Top5
+  Recall@5: 1.000
+  nDCG@5: 1.000
+  MRR: 1.000
+  延迟: 79ms
+
+配置: BM25 Top5
+  Recall@5: 1.000
+  nDCG@5: 0.926
+  MRR: 0.900
+  延迟: 90ms
+
+配置: 稠密 Top5
+  Recall@5: 1.000
+  nDCG@5: 0.926
+  MRR: 0.900
+  延迟: 6055ms
+
+配置: 测试数据集 - hybrid
+  Recall@5: 1.000
+  nDCG@5: 1.000
+  MRR: 1.000
+  延迟: 74ms
+
+配置: 测试数据集 - bm25
+  Recall@5: 1.000
+  nDCG@5: 0.926
+  MRR: 0.900
+  延迟: 83ms
+
+配置: 测试数据集 - dense
+  Recall@5: 1.000
+  nDCG@5: 0.926
+  MRR: 0.900
+  延迟: 6330ms
+
+配置: 测试数据集 - dense
+  Recall@5: 1.000
+  nDCG@5: 0.926
+  MRR: 0.900
+  延迟: 6492ms

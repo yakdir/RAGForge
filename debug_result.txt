@@ -1,0 +1,18 @@
+=== 知识库列表 ===
+  id=2c448f30-fa06-45b8-bb6b-a46084ea5a6f name=默认知识库
+
+=== 文档列表 ===
+  id=5ee3d2d8-b0f2-43aa-9bb4-461787ae64b0 title=人工智能框架.docx collection=None status=ready
+  id=c01cfbee-683f-4272-9620-2a8d1bfb8590 title=机器学习.pdf collection=None status=failed
+  id=45e0087f-23c1-419f-b18e-9ce67466e6bb title=测试.txt collection=None status=ready
+  id=b348b535-b776-45d4-9455-ac5495c0c825 title=测试.txt collection=None status=failed
+  id=d1647e0d-500c-4fa2-ab17-8df9e4629243 title=测试.txt collection=None status=processing
+  id=5d2060ac-0bb7-44dd-aa9d-5b59944e5d36 title=测试.txt collection=None status=pending
+
+=== Chunk 总数: 5 ===
+
+=== 查询：collection=默认知识库 的 chunk ===
+  找到 0 个 chunk
+  只按 status=ready 查：5 个 chunk
+  ready 状态的文档：2 个
+  这些文档的 chunk：5 个

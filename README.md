@@ -1,5 +1,9 @@
 # RAGForge — RAG 评估与优化平台
 
+![Python](https://img.shields.io/badge/python-3.12-blue)
+![Django](https://img.shields.io/badge/django-5.2-green)
+![License](https://img.shields.io/badge/license-MIT-blue)
+
 > 全本地运行的 RAG 系统评估与优化平台 · 多检索策略对比 · Recall@K / nDCG / MRR 量化评估 · 零 API 成本
 
 ## 项目简介
@@ -11,11 +15,40 @@ RAGForge 是一个端到端的 RAG（检索增强生成）系统评估平台，�
 3. **量化评估** → 自动生成测试数据集，计算 Recall@K / nDCG / MRR 等指标
 4. **对比优化** → 不同配置的效果可视化对比，找到最优检索方案
 
+## 评估结果对比
+
+在 5 题测试数据集上的对比结果（bge-m3 嵌入模型）：
+
+| 检索策略 | Recall@5 | nDCG@5 | MRR | 平均延迟 |
+|---|---|---|---|---|
+| 稠密检索 (Dense) | 1.000 | 0.926 | 0.900 | ~80ms* |
+| BM25 关键词检索 | 1.000 | 0.926 | 0.900 | 83ms |
+| 混合检索 (Hybrid) | 1.000 | 1.000 | 1.000 | 74ms |
+| 混合 + Reranker | 1.000 | 1.000 | 1.000 | 81ms |
+
+*稠密检索首次查询需加载模型，约 6 秒；后续查询在 GPU 上约 80ms。
+
+**结论**：混合检索结合了向量语义匹配和关键词精确匹配的优势，nDCG 和 MRR 均优于单一策略；Reranker 在复杂查询场景下可进一步提升排序质量。
+
+## 界面预览
+
+### 首页 Dashboard
+![首页Dashboard](docs/screenshots/01-dashboard.png)
+
+### 文档上传
+![文档上传](docs/screenshots/04-upload.png)
+
+### 文档检索
+![文档检索](docs/screenshots/02-retrieval.png)
+
+### 评估对比图表
+![评估对比图表](docs/screenshots/03-evaluation.png)
+
 ## 技术栈
 
 | 层 | 技术 |
 |---|---|
-| 后端框架 | Django 6.1 |
+| 后端框架 | Django 5.2 LTS |
 | 任务队列 | Celery（开发环境用同步模式） |
 | 向量数据库 | ChromaDB |
 | Embedding 模型 | BAAI/bge-m3（本地运行） |
