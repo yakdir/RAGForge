@@ -1,11 +1,12 @@
 """Tests for evaluation metrics."""
 import pytest
+
 from apps.evaluation.metrics import (
+    dcg_at_k,
+    evaluate_run,
+    ndcg_at_k,
     recall_at_k,
     reciprocal_rank,
-    dcg_at_k,
-    ndcg_at_k,
-    evaluate_run,
 )
 
 

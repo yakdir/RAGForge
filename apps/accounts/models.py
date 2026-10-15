@@ -1,5 +1,6 @@
 """Custom User model with UUID primary key and email login."""
 import uuid
+
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 

@@ -1,7 +1,9 @@
 """Retrieval views."""
 from django.shortcuts import render
-from apps.documents.models import DocumentCollection, Chunk
-from .services import DenseRetriever, BM25Retriever, HybridRetriever, RerankerService
+
+from apps.documents.models import Chunk, DocumentCollection
+
+from .services import BM25Retriever, DenseRetriever, HybridRetriever, RerankerService
 
 
 def search_page(request):

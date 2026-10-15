@@ -1,7 +1,7 @@
 """Retrieval services: dense, BM25, hybrid, and reranker."""
 import logging
-from typing import List, Dict, Any
 from dataclasses import dataclass
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +27,7 @@ class DenseRetriever:
         )
         self.embedding_model = embedding_model
 
-    def retrieve(self, query: str, top_k: int = 5) -> List[RetrievalResult]:
+    def retrieve(self, query: str, top_k: int = 5) -> list[RetrievalResult]:
         from apps.documents.services import EmbeddingService
         query_embedding = EmbeddingService.encode([query], self.embedding_model)[0]
 
@@ -55,15 +55,15 @@ class DenseRetriever:
 class BM25Retriever:
     """BM25 稀疏检索（纯 Python 实现）"""
 
-    def __init__(self, corpus: List[Dict[str, str]]):
-        from rank_bm25 import BM25Okapi
+    def __init__(self, corpus: list[dict[str, str]]):
         import jieba
+        from rank_bm25 import BM25Okapi
 
         self.corpus = corpus
         self.tokenized = [list(jieba.cut(doc['content'])) for doc in corpus]
         self.bm25 = BM25Okapi(self.tokenized) if self.tokenized else None
 
-    def retrieve(self, query: str, top_k: int = 5) -> List[RetrievalResult]:
+    def retrieve(self, query: str, top_k: int = 5) -> list[RetrievalResult]:
         if not self.bm25:
             return []
 
@@ -94,7 +94,7 @@ class HybridRetriever:
     def __init__(
         self,
         collection_name: str,
-        corpus: List[Dict[str, str]],
+        corpus: list[dict[str, str]],
         dense_weight: float = 0.7,
         bm25_weight: float = 0.3,
         embedding_model: str = 'BAAI/bge-m3',
@@ -104,7 +104,7 @@ class HybridRetriever:
         self.dense_weight = dense_weight
         self.bm25_weight = bm25_weight
 
-    def retrieve(self, query: str, top_k: int = 5) -> List[RetrievalResult]:
+    def retrieve(self, query: str, top_k: int = 5) -> list[RetrievalResult]:
         dense_results = self.dense.retrieve(query, top_k=top_k * 2)
         bm25_results = self.bm25.retrieve(query, top_k=top_k * 2)
 
@@ -120,7 +120,7 @@ class HybridRetriever:
         dense_norm = normalize(dense_results)
         bm25_norm = normalize(bm25_results)
 
-        score_map: Dict[str, Dict[str, Any]] = {}
+        score_map: dict[str, dict[str, Any]] = {}
 
         for r, norm_score in dense_norm:
             if r.chunk_id not in score_map:
@@ -165,9 +165,9 @@ class RerankerService:
     def rerank(
         cls,
         query: str,
-        results: List[RetrievalResult],
+        results: list[RetrievalResult],
         top_k: int = 3,
-    ) -> List[RetrievalResult]:
+    ) -> list[RetrievalResult]:
         if not results:
             return []
 
@@ -187,7 +187,7 @@ class RetrieverFactory:
     """检索器工厂——根据配置创建对应检索器"""
 
     @staticmethod
-    def create(config, collection_name: str, corpus: List[Dict]):
+    def create(config, collection_name: str, corpus: list[dict]):
         if config.retrieval_type == 'dense':
             return DenseRetriever(collection_name)
         elif config.retrieval_type == 'bm25':
@@ -203,7 +203,7 @@ class RetrieverFactory:
             raise ValueError(f"Unknown retrieval type: {config.retrieval_type}")
 
     @staticmethod
-    def retrieve_with_pipeline(config, collection_name, corpus, query) -> List[RetrievalResult]:
+    def retrieve_with_pipeline(config, collection_name, corpus, query) -> list[RetrievalResult]:
         """完整检索管线：检索 → 可选 rerank"""
         retriever = RetrieverFactory.create(config, collection_name, corpus)
 

@@ -1,11 +1,10 @@
 """Evaluation metrics: Recall@K, MRR, NDCG@K."""
 import math
-from typing import List, Dict
 
 
 def recall_at_k(
-    retrieved_ids: List[str],
-    relevant_ids: List[str],
+    retrieved_ids: list[str],
+    relevant_ids: list[str],
     k: int,
 ) -> float:
     """Recall@K：前 K 条结果中命中相关文档的比例。"""
@@ -20,8 +19,8 @@ def recall_at_k(
 
 
 def reciprocal_rank(
-    retrieved_ids: List[str],
-    relevant_ids: List[str],
+    retrieved_ids: list[str],
+    relevant_ids: list[str],
 ) -> float:
     """RR：第一个相关结果的排名倒数。"""
     relevant_set = set(relevant_ids)
@@ -31,7 +30,7 @@ def reciprocal_rank(
     return 0.0
 
 
-def dcg_at_k(relevance_scores: List[float], k: int) -> float:
+def dcg_at_k(relevance_scores: list[float], k: int) -> float:
     """DCG@K：折扣累积增益。"""
     dcg = 0.0
     for i, rel in enumerate(relevance_scores[:k]):
@@ -40,8 +39,8 @@ def dcg_at_k(relevance_scores: List[float], k: int) -> float:
 
 
 def ndcg_at_k(
-    retrieved_ids: List[str],
-    relevance_map: Dict[str, float],
+    retrieved_ids: list[str],
+    relevance_map: dict[str, float],
     k: int,
 ) -> float:
     """NDCG@K：归一化折扣累积增益。"""
@@ -58,11 +57,11 @@ def ndcg_at_k(
 
 
 def evaluate_run(
-    retrieved_ids: List[str],
-    relevant_ids: List[str],
-    relevance_map: Dict[str, float] = None,
-    k_values: List[int] = None,
-) -> Dict[str, float]:
+    retrieved_ids: list[str],
+    relevant_ids: list[str],
+    relevance_map: dict[str, float] = None,
+    k_values: list[int] = None,
+) -> dict[str, float]:
     """对单次检索结果计算全部指标。"""
     if k_values is None:
         k_values = [1, 3, 5, 10]

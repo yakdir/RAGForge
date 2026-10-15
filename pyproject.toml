@@ -1,0 +1,18 @@
+# Ruff 配置
+[tool.ruff]
+target-version = "py312"
+line-length = 120
+
+# 忽略的规则
+[tool.ruff.lint]
+extend-ignore = [
+    "RUF012",  # Django 模型/Admin 的 list_display 等是类属性，误报
+    "RUF013",  # Optional 类型提示
+    "PLC0206", # 字典迭代方式
+]
+
+# 排除的目录
+exclude = [
+    "**/migrations/",
+    "**/__pycache__/",
+]

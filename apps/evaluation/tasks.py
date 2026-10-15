@@ -1,6 +1,7 @@
 """Celery async evaluation tasks."""
-import time
 import logging
+import time
+
 from celery import shared_task
 from django.db import transaction
 
@@ -14,10 +15,10 @@ def _avg(values):
 @shared_task(bind=True, max_retries=2, default_retry_delay=60)
 def run_evaluation(self, eval_run_id: str):
     """异步执行一次评估运行。"""
-    from apps.evaluation.models import EvalRun, EvalResult
-    from apps.evaluation.metrics import evaluate_run
-    from apps.retrieval.services import RetrieverFactory
     from apps.documents.models import Chunk
+    from apps.evaluation.metrics import evaluate_run
+    from apps.evaluation.models import EvalResult, EvalRun
+    from apps.retrieval.services import RetrieverFactory
 
     try:
         eval_run = EvalRun.objects.select_related(
@@ -119,8 +120,8 @@ def run_grid_search(collection_id: str, configs: list):
 @shared_task
 def generate_eval_questions(dataset_id: str, num_questions: int = 20):
     """从知识库自动生成评估问题"""
-    from apps.evaluation.models import EvalDataset, EvalQuestion
     from apps.documents.models import Chunk
+    from apps.evaluation.models import EvalDataset, EvalQuestion
 
     dataset = EvalDataset.objects.get(id=dataset_id)
     chunks = Chunk.objects.filter(
@@ -143,10 +144,11 @@ def generate_eval_questions(dataset_id: str, num_questions: int = 20):
 def run_evaluation_sync(eval_run_id: str):
     """同步执行评估（开发环境用，不走 Celery）"""
     import time
-    from apps.evaluation.models import EvalRun, EvalResult
-    from apps.evaluation.metrics import evaluate_run
-    from apps.retrieval.services import DenseRetriever, BM25Retriever, HybridRetriever
+
     from apps.documents.models import Chunk
+    from apps.evaluation.metrics import evaluate_run
+    from apps.evaluation.models import EvalResult, EvalRun
+    from apps.retrieval.services import BM25Retriever, DenseRetriever, HybridRetriever
 
     eval_run = EvalRun.objects.select_related('dataset', 'config').get(id=eval_run_id)
     eval_run.status = 'running'

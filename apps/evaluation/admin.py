@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import EvalDataset, EvalQuestion, EvalRun, EvalResult
+
+from .models import EvalDataset, EvalQuestion, EvalResult, EvalRun
 
 
 @admin.register(EvalDataset)

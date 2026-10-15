@@ -1,6 +1,7 @@
 """Document views."""
-from django.shortcuts import render, redirect, get_object_or_404
-from .models import Document, DocumentCollection, Chunk
+from django.shortcuts import get_object_or_404, redirect, render
+
+from .models import Document, DocumentCollection
 from .tasks import process_document_sync
 
 

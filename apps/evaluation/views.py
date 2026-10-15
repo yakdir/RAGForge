@@ -1,8 +1,10 @@
 """Evaluation views."""
-from django.shortcuts import render, redirect, get_object_or_404
-from apps.documents.models import DocumentCollection, Chunk
+from django.shortcuts import get_object_or_404, redirect, render
+
+from apps.documents.models import Chunk, DocumentCollection
 from apps.retrieval.models import RetrievalConfig
-from .models import EvalDataset, EvalQuestion, EvalRun, EvalResult
+
+from .models import EvalDataset, EvalQuestion, EvalRun
 from .tasks import run_evaluation_sync
 
 

@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Document, Chunk, DocumentCollection
+
+from .models import Chunk, Document, DocumentCollection
 
 
 @admin.register(Document)

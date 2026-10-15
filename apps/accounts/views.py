@@ -1,7 +1,7 @@
 """Accounts views."""
-from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate, update_session_auth_hash
+from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
+from django.shortcuts import redirect, render
 
 
 def login_page(request):

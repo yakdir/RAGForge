@@ -1,6 +1,8 @@
 """Retrieval config model."""
 import uuid
+
 from django.db import models
+
 from apps.documents.models import TimeStampedModel
 
 

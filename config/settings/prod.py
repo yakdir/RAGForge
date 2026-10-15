@@ -1,5 +1,5 @@
 """Production settings."""
-from .base import *  # noqa
+from .base import *
 
 DEBUG = False
 

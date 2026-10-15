@@ -9,8 +9,12 @@ def process_document_sync(document_id: str):
     同步处理文档：解析 → 分块 → 向量化 → 存 ChromaDB
     （开发环境直接调用，不走 Celery）
     """
-    from apps.documents.models import Document, Chunk, DocumentCollection
-    from apps.documents.services import DocumentParser, ChunkingStrategy, EmbeddingService
+    from apps.documents.models import Chunk, Document, DocumentCollection
+    from apps.documents.services import (
+        ChunkingStrategy,
+        DocumentParser,
+        EmbeddingService,
+    )
 
     doc = Document.objects.get(id=document_id)
     doc.status = 'processing'
